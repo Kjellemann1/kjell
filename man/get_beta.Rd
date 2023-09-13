@@ -7,27 +7,25 @@
 get_beta(
   ticker,
   index,
-  star_date = Sys.Date() - 365 * 5,
+  start_date = Sys.Date() - 365 * 5,
   end_date = Sys.Date()
 )
 }
 \arguments{
-\item{ticker}{stock ticker from yahoo as a string. Example: 'EQNR.OL'}
+\item{ticker}{stock ticker from yahoo as a string}
 
-\item{index}{index ticker from yahoo as a string. Example: 'OSEBX.OL'}
+\item{index}{index ticker from yahoo as a string}
 
-\item{end_date}{end date. Default is today}
-
-\item{start_date}{starting date. Default is 5 years from today}
+\item{end_date}{}
 }
 \value{
-the estimated beta
+Returns the estimated beta
 }
 \description{
 estimate beta for a stock using data from yahoo finance
 }
 \examples{
 get_beta('EQNR.OL', 'OSEBX.OL')
-get_beta('EQNR.OL', 'OSEBX.OL', '2021-01-01', '2023-01-01')
+get_beta('EQNR.OL', 'OSEBX.OL', '2015-01-01', '2017-01-01')
 
 }

@@ -8,22 +8,22 @@
 #' 
 #' @description estimate beta for a stock using data from yahoo finance
 #'
-#' @param ticker stock ticker from yahoo as a string. Example: 'EQNR.OL'
-#' @param index index ticker from yahoo as a string. Example: 'OSEBX.OL'
-#' @param start_date starting date. Default is 5 years from today
-#' @param end_date end date. Default is today
+#' @param ticker stock ticker from yahoo as a string
+#' @param index index ticker from yahoo as a string
+#' @param start_date
+#' @param end_date
 #'
-#' @return the estimated beta
+#' @return Returns the estimated beta
 #'
 #' @examples
 #' get_beta('EQNR.OL', 'OSEBX.OL')
-#' get_beta('EQNR.OL', 'OSEBX.OL', '2021-01-01', '2023-01-01')
+#' get_beta('EQNR.OL', 'OSEBX.OL', '2015-01-01', '2017-01-01')
 #' 
 #' @export
 #' @name get_beta
 
-get_beta <- function(ticker, index, star_date = Sys.Date() - 365 * 5, end_date = Sys.Date()) {
-	suppressWarnings(getSymbols(c(index, ticker), from = '2021-01-01', to = Sys.Date()))
+get_beta <- function(ticker, index, start_date = Sys.Date() - 365 * 5, end_date = Sys.Date()) {
+	suppressWarnings(getSymbols(c(index, ticker), from = start_date, to = end_date))
 	
 	xts_beta <- merge(get(index), get(ticker)) %>% na.omit()
 	
