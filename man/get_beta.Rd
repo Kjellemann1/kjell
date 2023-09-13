@@ -16,13 +16,15 @@ get_beta(
 
 \item{index}{index ticker from yahoo as a string}
 
-\item{end_date}{}
+\item{start_date}{start of estimation period}
+
+\item{end_date}{end of estimation period}
 }
 \value{
 Returns the estimated beta
 }
 \description{
-estimate beta for a stock using data from yahoo finance
+Estimate the beta for a stock using data from yahoo finance
 }
 \examples{
 get_beta('EQNR.OL', 'OSEBX.OL')

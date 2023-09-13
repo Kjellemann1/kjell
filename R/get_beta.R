@@ -6,12 +6,12 @@
 #' @import quantmod
 #' @import lubridate
 #' 
-#' @description estimate beta for a stock using data from yahoo finance
+#' @description Estimate the beta for a stock using data from yahoo finance
 #'
 #' @param ticker stock ticker from yahoo as a string
 #' @param index index ticker from yahoo as a string
-#' @param start_date
-#' @param end_date
+#' @param start_date start of estimation period
+#' @param end_date end of estimation period
 #'
 #' @return Returns the estimated beta
 #'
