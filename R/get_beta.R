@@ -23,7 +23,7 @@
 #' @name get_beta
 
 get_beta <- function(ticker, index, start_date = Sys.Date() - 365 * 5, end_date = Sys.Date()) {
-	suppressWarnings(getSymbols(c(index, ticker), from = start_date, to = end_date))
+	suppressWarnings(getSymbols(c(index, ticker), from = start_date, to = end_date, env = globalenv()))
 	
 	xts_beta <- merge(get(index), get(ticker)) %>% na.omit()
 	
