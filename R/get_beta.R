@@ -1,6 +1,7 @@
 #' get_beta
 #' 
 #' @import dplyr
+#' @import zoo
 #' @import xts
 #' @import quantmod
 #' @import lubridate
