@@ -7,8 +7,8 @@
 get_beta(
   ticker,
   index,
-  start_date = Sys.Date() - 365 * 5,
-  end_date = Sys.Date()
+  start_date = Sys.Date() \%>\% floor_date("month") \%m-\% months(61),
+  end_date = Sys.Date() \%>\% floor_date("month")
 )
 }
 \arguments{
@@ -24,10 +24,10 @@ get_beta(
 Returns the estimated beta
 }
 \description{
-Estimate the beta for a stock using data from yahoo finance
+Estimates the beta for a stock using data from yahoo finance. By default it uses 5 years of monthly data. The same as yahoo finance
 }
 \examples{
-get_beta('EQNR.OL', 'OSEBX.OL')
+get_beta('TSLA', '^GSPC')
 get_beta('EQNR.OL', 'OSEBX.OL', '2015-01-01', '2017-01-01')
 
 }

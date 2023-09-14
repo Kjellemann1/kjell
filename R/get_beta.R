@@ -6,7 +6,7 @@
 #' @import quantmod
 #' @import lubridate
 #' 
-#' @description Estimate the beta for a stock using data from yahoo finance
+#' @description Estimates the beta for a stock using data from yahoo finance. By default it uses 5 years of monthly data. The same as yahoo finance
 #'
 #' @param ticker stock ticker from yahoo as a string
 #' @param index index ticker from yahoo as a string
@@ -16,17 +16,18 @@
 #' @return Returns the estimated beta
 #'
 #' @examples
-#' get_beta('EQNR.OL', 'OSEBX.OL')
+#' get_beta('TSLA', '^GSPC')
 #' get_beta('EQNR.OL', 'OSEBX.OL', '2015-01-01', '2017-01-01')
 #' 
 #' @export
 #' @name get_beta
 
-get_beta <- function(ticker, index, start_date = Sys.Date() - 365 * 5, end_date = Sys.Date()) {
-	suppressWarnings(getSymbols(c(index, ticker), from = start_date, to = end_date, env = globalenv()))
-	
+get_beta <- function(ticker, index, 
+			   start_date = Sys.Date() %>% floor_date('month') %m-% months(61), 
+			   end_date = Sys.Date() %>% floor_date('month')) {
+	getSymbols(c(index, ticker), from = start_date, to = end_date, src = 'yahoo') %>% suppressWarnings()
+	index <- gsub('\\^', '', index)
 	xts_beta <- merge(get(index), get(ticker)) %>% na.omit()
-	
 	df_beta <- xts_beta %>%
 		as_tibble() %>%
 		mutate(date = index(xts_beta), 
@@ -36,12 +37,11 @@ get_beta <- function(ticker, index, start_date = Sys.Date() - 365 * 5, end_date 
 		mutate(year = year(date), 
 			 month = month(date)) %>%
 		group_by(year, month) %>% 
-		mutate(index_m_ar = index[date == max(date)] / index[date == min(date)] - 1, 
-			 ticker_m_ar = ticker[date == max(date)] / ticker[date == min(date)] - 1) %>% 
-		na.fill0(0) %>% 
+		filter(date == max(date)) %>% 
 		ungroup() %>% 
-		select(year, month, index_m_ar, ticker_m_ar) %>% 
-		unique()
+		mutate(index_return = (index - dplyr::lag(index)) / dplyr::lag(index), 
+			 ticker_return = (ticker - dplyr::lag(ticker)) / dplyr::lag(ticker)) %>% 
+		na.omit()
 	
-	return(lm(ticker_m_ar ~ index_m_ar, data = df_beta)$coefficients[2] %>% unname())
+	return(lm(ticker_return ~ index_return, data = df_beta)$coefficients[2] %>% unname() %>% round(2))
 }
