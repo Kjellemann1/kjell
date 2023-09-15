@@ -7,6 +7,7 @@
 get_beta(
   ticker,
   index,
+  method = "A",
   start_date = Sys.Date() \%>\% floor_date("month") \%m-\% months(61),
   end_date = Sys.Date() \%>\% floor_date("month")
 )
@@ -16,6 +17,8 @@ get_beta(
 
 \item{index}{index ticker from yahoo as a string}
 
+\item{method}{'A' uses daily returns aggregated into monthly. 'B' uses last closing price of the month}
+
 \item{start_date}{start of estimation period}
 
 \item{end_date}{end of estimation period}
@@ -24,10 +27,14 @@ get_beta(
 Returns the estimated beta
 }
 \description{
-Estimates the beta for a stock using data from yahoo finance. By default it uses 5 years of monthly data. The same as yahoo finance
+Estimates the beta for a stock using data from yahoo finance.
+By default it uses 5 years of monthly data aggregated from daily returns.
+It also has a second method which uses the closing price of the last day of the month,
+which should be equivalent to the method used by yahoo finance.
 }
 \examples{
-get_beta('TSLA', '^GSPC')
-get_beta('EQNR.OL', 'OSEBX.OL', '2015-01-01', '2017-01-01')
+get_beta(ticker = 'TSLA', index = '^GSPC')
+get_beta(ticker = 'MSFT', index = '^GSPC', method = 'B')
+get_beta(ticker = 'MOWI.OL', index = 'OSEBX.OL', start_date = '2015-01-01', end_date = '2017-01-01')
 
 }
