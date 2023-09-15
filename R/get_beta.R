@@ -7,7 +7,7 @@
 #' @import lubridate
 #' 
 #' @description Estimates the beta for a stock using data from yahoo finance. 
-#' By default it uses 5 years of monthly data aggregated from daily returns.
+#' By default it uses 5 years of monthly data aggregated from daily adjusted close returns.
 #' It also has a second method which uses the closing price of the last day of the month,
 #' which should be equivalent to the method used by yahoo finance.
 #' 
@@ -36,8 +36,8 @@ get_beta <- function(ticker, index, method = 'A',
 				A = xts_beta %>% # Aggregates daily returns into monthly returns
 					as_tibble() %>%
 					mutate(date = index(xts_beta), 
-						 ticker = get(paste0(ticker, '.Close')), 
-						 index = get(paste0(index, '.Close'))) %>% 
+						 ticker = get(paste0(ticker, '.Adjusted')), 
+						 index = get(paste0(index, '.Adjusted'))) %>% 
 					select(date, index, ticker) %>% 
 					mutate(year = year(date), 
 						 month = month(date)) %>%

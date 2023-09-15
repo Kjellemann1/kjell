@@ -28,7 +28,7 @@ Returns the estimated beta
 }
 \description{
 Estimates the beta for a stock using data from yahoo finance.
-By default it uses 5 years of monthly data aggregated from daily returns.
+By default it uses 5 years of monthly data aggregated from daily adjusted close returns.
 It also has a second method which uses the closing price of the last day of the month,
 which should be equivalent to the method used by yahoo finance.
 }
