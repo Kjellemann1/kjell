@@ -29,15 +29,14 @@
 get_beta <- function(ticker, index, method = 'A',
 			   start_date = Sys.Date() %>% floor_date('month') %m-% months(61), 
 			   end_date = Sys.Date() %>% floor_date('month')) {
-	getSymbols(c(index, ticker), from = start_date, to = end_date, src = 'yahoo') %>% suppressWarnings()
-	index <- gsub('\\^', '', index)
-	xts_beta <- merge(get(index), get(ticker)) %>% na.omit()
+	names <- getSymbols(c(index, ticker), from = start_date, to = end_date, src = 'yahoo') %>% suppressWarnings()
+	xts_beta <- merge(get(name[1]), get(name[2])) %>% na.omit()
 	df_beta <- switch(method, 
 				A = xts_beta %>% # Aggregates daily returns into monthly returns
 					as_tibble() %>%
-					mutate(date = index(xts_beta), 
-						 ticker = get(paste0(ticker, '.Adjusted')), 
-						 index = get(paste0(index, '.Adjusted'))) %>% 
+					mutate(date = zoo::index(xts_beta), 
+						 ticker = get(paste0(name[1], '.Adjusted')), 
+						 index = get(paste0(name[2], '.Adjusted'))) %>% 
 					select(date, index, ticker) %>% 
 					mutate(year = year(date), 
 						 month = month(date)) %>%
@@ -53,17 +52,18 @@ get_beta <- function(ticker, index, method = 'A',
 					ungroup(),
 				B = xts_beta %>% # Uses last day of the month
 					as_tibble() %>%
-					mutate(date = index(xts_beta), 
-						 index = get(paste0(index, '.Close')), 
-						 ticker = get(paste0(ticker, '.Close'))) %>% 
+					mutate(date = zoo::index(xts_beta), 
+						 index = get(paste0(name[1], '.Close')), 
+						 ticker = get(paste0(name[2], '.Close'))) %>% 
 					select(date, index, ticker) %>% 
 					mutate(year = year(date), 
 						 month = month(date)) %>%
 					group_by(year, month) %>% 
 					filter(date == max(date)) %>% 
 					ungroup() %>% 
-					mutate(index_return = (index - dplyr::lag(index)) / dplyr::lag(index), 
-						 ticker_return = (ticker - dplyr::lag(ticker)) / dplyr::lag(ticker)) %>% 
+					mutate(index_return = (index-dplyr::lag(index))/dplyr::lag(index), 
+						 ticker_return = (ticker-dplyr::lag(ticker))/dplyr::lag(ticker)) %>% 
 					na.omit())
 	return(lm(ticker_return ~ index_return, data = df_beta)$coefficients[2] %>% unname() %>% round(2))
 }
+
