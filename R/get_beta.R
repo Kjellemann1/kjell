@@ -29,7 +29,7 @@
 get_beta <- function(ticker, index, method = 'A',
 			   start_date = Sys.Date() %>% floor_date('month') %m-% months(61), 
 			   end_date = Sys.Date() %>% floor_date('month')) {
-	names <- getSymbols(c(index, ticker), from = start_date, to = end_date, src = 'yahoo') %>% suppressWarnings()
+	names <- getSymbols(c(index, ticker), from = start_date, to = end_date, src = 'yahoo')
 	xts_beta <- merge(get(names[1]), get(names[2])) %>% na.omit()
 	df_beta <- switch(method, 
 				A = xts_beta %>% # Aggregates daily returns into monthly returns
