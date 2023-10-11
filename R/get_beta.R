@@ -35,8 +35,8 @@ get_beta <- function(ticker, index, method = 'A',
 				A = xts_beta %>% # Aggregates daily returns into monthly returns
 					as_tibble() %>%
 					mutate(date = zoo::index(xts_beta), 
-						 ticker = get(paste0(names[1], '.Adjusted')), 
-						 index = get(paste0(names[2], '.Adjusted'))) %>% 
+						 ticker = get(paste0(gsub('[^a-zA-Z0-9]', '.', names[1]), '.Adjusted')), 
+						 index = get(paste0(gsub('[^a-zA-Z0-9]', '.', names[2]), '.Adjusted'))) %>% 
 					select(date, index, ticker) %>% 
 					mutate(year = year(date), 
 						 month = month(date)) %>%
@@ -53,8 +53,8 @@ get_beta <- function(ticker, index, method = 'A',
 				B = xts_beta %>% # Uses last day of the month
 					as_tibble() %>%
 					mutate(date = zoo::index(xts_beta), 
-						 index = get(paste0(names[1], '.Close')), 
-						 ticker = get(paste0(names[2], '.Close'))) %>% 
+						 ticker = get(paste0(gsub('[^a-zA-Z0-9]', '.', names[1]), '.Close')), 
+						 index = get(paste0(gsub('[^a-zA-Z0-9]', '.', names[2]), '.Close'))) %>% 
 					select(date, index, ticker) %>% 
 					mutate(year = year(date), 
 						 month = month(date)) %>%
